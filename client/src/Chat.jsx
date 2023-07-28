@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import ScrollToBottom from 'react-scroll-to-bottom';
 
 
 const Chat = ({ socket, username, room }) => {
@@ -16,6 +17,7 @@ const Chat = ({ socket, username, room }) => {
 
       await socket.emit("send_message", messageData);
       setMessageList((list) => [...list, messageData]);
+      setCurrentMessage("");
     }
   }
 
@@ -38,6 +40,7 @@ const Chat = ({ socket, username, room }) => {
         <p>Live Chat</p>
       </div>
       <div className="chat-body">
+      <ScrollToBottom className="message-container">
         {messageList.map((messageContent) => {
           return ( 
             <div className="message" id={username !== messageContent.author ? "you" : "other"}>
@@ -53,10 +56,12 @@ const Chat = ({ socket, username, room }) => {
             </div>
             ) ;
         })}
+      </ScrollToBottom>
       </div>
       <div className="chat-footer">
         <input 
           type="text" 
+          value={currentMessage}
           placeholder="Hey..." 
           onChange={(e)=> setCurrentMessage(e.target.value)}
           onKeyPress={(e)=> {
